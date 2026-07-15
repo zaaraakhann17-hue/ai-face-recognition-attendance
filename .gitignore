@@ -1,0 +1,6 @@
+.venv/
+.venv-1/
+Git-2.55.0-64-bit.exe
+__pycache__/
+*.pyc
+database.db
