@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS students (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    face_encoding TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS attendance (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id TEXT NOT NULL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(student_id) REFERENCES students(id)
+);

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Face Attendance System</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}?v=5000">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Automated Face Recognition Attendance</h1>
+           <nav>
+               <a href="/" class="active">Live Terminal</a> | 
+               <a href="/student_summary">View My History</a> | 
+               <a href="/login">Teacher Login Panel</a>
+            </nav>
+            
+            </header>
+
+        <main class="grid" style="display: block; max-width: 600px; margin: 0 auto;">
+            <div class="card">
+                <h2>Scanner Viewport</h2>
+                
+                <div class="video-container" style="position: relative; text-align: center;">
+                    <video id="scanner-webcam" autoplay playsinline width="100%" style="background: black; border-radius: 8px;"></video>
+                    <canvas id="capture-canvas" style="display: none;"></canvas>
+                </div>
+                
+                <button id="verify-btn" class="btn btn-primary w-100 py-2 mt-3" style="width: 100%; margin-top: 15px;">Process Verification</button>
+                <div id="status-box" style="margin-top: 15px; font-weight: bold; text-align: center;"></div>
+            </div>
+        </main>
+    </div>
+
+<script>
+  const video = document.getElementById('scanner-webcam');
+  const canvas = document.getElementById('capture-canvas');
+  const verifyBtn = document.getElementById('verify-btn');
+  const statusBox = document.getElementById('status-box');
+
+  // 1. Start the camera stream directly through the browser layer
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true })
+          .then(stream => { video.srcObject = stream; })
+          .catch(err => { 
+              console.error("Webcam hardware block: ", err);
+              statusBox.innerText = "Error: Camera access denied by browser.";
+          });
+  }
+
+  // 2. Grab a snapshot frame and POST it directly to your endpoint when clicked
+  verifyBtn.addEventListener('click', () => {
+      statusBox.innerText = "Scanning frame... Processing biometric match...";
+      
+      const context = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      const imageData = canvas.toDataURL('image/jpeg');
+
+      fetch('/api/scan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: imageData })
+      })
+      .then(response => response.json())
+      .then(data => {
+          statusBox.innerText = data.message;
+      })
+      .catch(err => {
+          console.error(err);
+          statusBox.innerText = "System communications error verifying frame.";
+      });
+  });
+</script>
+</body>
+</html>

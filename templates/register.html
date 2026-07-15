@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Student</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}?v=1002">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Registration Portal</h1>
+            <nav>
+                <a href="/">Live Terminal</a>
+                <a href="/register_page" class="active">Register Student</a>
+            </nav>
+        </header>
+
+        <main class="card form-card">
+            <h2>Add New Student Instance</h2>
+            
+            <form id="registerForm" action="/register" method="POST" enctype="multipart/form-data">
+                
+                <div class="form-group mb-3">
+                    <label>Unique ID / Roll Number</label>
+                    <input type="text" name="roll_no" class="form-control" required placeholder="e.g. 234567">
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label>Full Name</label>
+                    <input type="text" name="name" class="form-control" required placeholder="e.g. Zaara Khan">
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label"><b>Upload Student Photo:</b></label>
+                    <input type="file" name="file" class="form-control" accept="image/*" required style="margin-top: 5px;">
+                </div>
+
+                <button type="submit" id="register-btn" class="btn btn-primary w-100 py-2 mt-3" style="width: 100%;">Register Student & Save Profile</button>
+            </form>
+            
+            <div id="status-box"></div>
+        </main>
+    </div>
+</body>
+</html>

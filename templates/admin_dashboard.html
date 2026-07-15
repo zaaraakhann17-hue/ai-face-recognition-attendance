@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Admin Control Panel</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}?v=5000">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Teacher Management Portal</h1>
+            <nav>
+                <a href="/">Go to Live Terminal</a> | 
+                <a href="/register_page">Register Student Instance</a> |
+                <a href="/logout" style="color: #ff4d4d;">Secure Logout</a>
+            </nav>
+            
+            <div class="metrics-banner" style="margin-top: 20px;">
+                <div class="metric-card"><h3>Total Enrolled</h3><p class="metric-number">{{ stats.total }}</p></div>
+                <div class="metric-card"><h3>Present Today</h3><p class="metric-number text-success">{{ stats.present }}</p></div>
+                <div class="metric-card"><h3>Absent Today</h3><p class="metric-number text-error">{{ stats.absent }}</p></div>
+            </div>
+        </header>
+
+        <main style="margin-top: 30px;">
+            <div class="card">
+                <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                   <h2 style="margin: 0;">Today's Attendance Logs</h2>
+                   <a href="/api/export-attendance" class="btn-download" style="text-decoration: none; background: var(--brand); color: white; padding: 8px 16px; border-radius: 6px; font-weight: 600;">Export CSV Spreadsheet</a> 
+                </div>
+                <table>
+                    <thead>
+                        <tr><th>Timestamp</th><th>Student ID</th><th>Name</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr><td>{{ log.timestamp }}</td><td>{{ log.id }}</td><td>{{ log.name }}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</body>
+</html> 

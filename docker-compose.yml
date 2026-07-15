@@ -1,0 +1,52 @@
+services:
+  # 🗄️ Database Access Microservice
+  db-service:
+    build:
+      context: .
+      dockerfile: ./db_service/Dockerfile
+    container_name: attendance_db_service
+    ports:
+      - "5002:5002"
+    volumes:
+      - db_data:/app/data
+    environment:
+      - FLASK_ENV=production
+    restart: always
+
+  # 🧠 AI Biometrics Neural Processing Engine
+  ai-service:
+    build:
+      context: .
+      dockerfile: ./ai_service/Dockerfile
+    container_name: attendance_ai_service
+    ports:
+      - "5001:5001"
+    environment:
+      - DB_SERVICE_URL=http://db-service:5002
+      - FLASK_ENV=production
+    depends_on:
+      - db-service
+    restart: always
+
+  # 📱 Frontend Edge UI Server
+  # 📱 Frontend Edge UI Server
+  # 📱 Frontend Edge UI Server
+  frontend-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: attendance_frontend
+    ports:
+      - "3000:3000"
+    # ❌ The devices block has been completely removed from here!
+    environment:
+      - AI_SERVICE_URL=http://ai-service:5001
+      - DB_SERVICE_URL=http://db-service:5002
+      - FLASK_ENV=production
+    depends_on:
+      - db-service
+      - ai-service
+    restart: always
+volumes:
+  db_data:
+    driver: local
